@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
 import CurrentMonth from "./components/CurrentMonth";
 import IncidentCross from "./components/IncidentCross";
@@ -27,26 +28,67 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        {apiDataJson ? (
-          <>
-            <CurrentMonth apiDataJson={apiDataJson} />
-            <IncidentCross apiDataJson={apiDataJson} />
-            <IncidentsDaysAgo apiDataJson={apiDataJson} />
-            <IncidentDetails apiDataJson={apiDataJson} />
-          </>
-        ) : (
-          <>
-            <div className="spinner-border" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
-          </>
-        )}
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          {/* <nav>
+            <Link to="/">Home</Link>
+            <Link to="/screenshot">Screenshot</Link>
+          </nav> */}
+          <Routes>
+            <Route path="/" element={<HomePage apiDataJson={apiDataJson} />} />
+            <Route path="/screenshot" element={<ScreenshotPage />} />
+          </Routes>
+        </header>
+      </div>
+    </Router>
   );
 }
+
+const HomePage = ({ apiDataJson }) => {
+  return apiDataJson ? (
+    <>
+      <CurrentMonth apiDataJson={apiDataJson} />
+      <IncidentCross apiDataJson={apiDataJson} />
+      <IncidentsDaysAgo apiDataJson={apiDataJson} />
+      <IncidentDetails apiDataJson={apiDataJson} />
+    </>
+  ) : (
+    <>
+      <div className="spinner-border" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
+    </>
+  );
+};
+
+const ScreenshotPage = () => {
+  const [screenshotUrl, setScreenshotUrl] = useState(null);
+
+  useEffect(() => {
+    fetch("/screenshot.png")
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        setScreenshotUrl(url);
+      })
+      .catch((error) => {
+        console.error("Error fetching screenshot:", error);
+      });
+  }, []);
+
+  return (
+    <div>
+      {screenshotUrl ? (
+        <img src={screenshotUrl} alt="Screenshot" />
+      ) : (
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const getIncidentData = async () => {
   const todaysDateOverride = import.meta.env.VITE_TODAYS_DATE_OVERRIDE;
