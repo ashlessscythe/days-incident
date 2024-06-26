@@ -6,7 +6,7 @@ import IncidentDetails from "./components/IncidentDetails";
 import IncidentsDaysAgo from "./components/IncidentsDaysAgo";
 
 function App() {
-  const [apiDataJson, setApiDataJson] = useState(0);
+  const [apiDataJson, setApiDataJson] = useState(null);
 
   useEffect(() => {
     const fetchIncidentData = async () => {
@@ -49,12 +49,12 @@ function App() {
 }
 
 const getIncidentData = async () => {
-  const todaysDateOverride = process.env.REACT_APP_TODAYS_DATE_OVERRIDE;
-  const statusOverride = process.env.REACT_APP_STATUS;
-  const lastIncidentDetailOverride = process.env.REACT_APP_LAST_INCIDENT_DETAIL;
-  const lastIncidentDateOverride = process.env.REACT_APP_LAST_INCIDENT_DATE;
+  const todaysDateOverride = import.meta.env.VITE_TODAYS_DATE_OVERRIDE;
+  const statusOverride = import.meta.env.VITE_STATUS;
+  const lastIncidentDetailOverride = import.meta.env.VITE_LAST_INCIDENT_DETAIL;
+  const lastIncidentDateOverride = import.meta.env.VITE_LAST_INCIDENT_DATE;
 
-  console.log("process.env is:", process.env);
+  // console.log("process.env is:", process.env);
 
   // Combine environment variables, API data, and default values
   const today = todaysDateOverride ? new Date(todaysDateOverride) : new Date();
