@@ -16,8 +16,8 @@ const INTERVAL = process.env.VITE_SCREENSHOT_INTERVAL_MINUTES || 5 * 60 * 1000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const publicDir = path.join(__dirname, "public");
-const screenshotPath = path.join(publicDir, "screenshot.png");
+const distDir = path.join(__dirname, "dist");
+const screenshotPath = path.join(distDir, "screenshot.png");
 const fallbackImagePath = path.join(__dirname, "src", "images", "no-url.png");
 
 const fetchAndSaveScreenshot = async () => {
@@ -59,11 +59,11 @@ console.log(`fetching screenshot every ${INTERVAL} minutes`);
 setInterval(fetchAndSaveScreenshot, INTERVAL * 60 * 1000);
 
 // Serve static files from the public directory
-app.use(express.static(publicDir));
+app.use(express.static(distDir));
 
 // The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
 app.get("*", (req, res) => {
-  res.sendFile(path.join(publicDir, "index.html"));
+  res.sendFile(path.join(distDir, "index.html"));
 });
 
 app.listen(port, () => {
