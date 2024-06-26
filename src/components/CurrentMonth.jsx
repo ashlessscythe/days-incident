@@ -1,7 +1,7 @@
 import React from "react";
 
 const CurrentMonth = React.memo(({ apiDataJson }) => {
-  const currentDate = apiDataJson.todaysDate;
+  const currentDate = apiDataJson.todaysDate || new Date();
   const monthNames = [
     "January",
     "February",

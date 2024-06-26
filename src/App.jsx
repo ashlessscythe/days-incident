@@ -1,21 +1,22 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import CurrentMonth from "./components/CurrentMonth";
 import IncidentCross from "./components/IncidentCross";
 import IncidentDetails from "./components/IncidentDetails";
 import IncidentsDaysAgo from "./components/IncidentsDaysAgo";
-import { server } from "./config";
 
 function App() {
-  const [apiDataJson, setApiDataJson] = useState(null);
+  const [apiDataJson, setApiDataJson] = useState(0);
 
   useEffect(() => {
     const fetchIncidentData = async () => {
       try {
         const data = await getIncidentData();
+        console.log("data is: ", data);
         setApiDataJson(data);
-      } catch {
-        setApiDataJson(null);
+      } catch (e) {
+        console.error("Failed to fetch incident data:", e);
+        setApiDataJson(getDefaultIncidentData());
       }
     };
 
@@ -31,9 +32,9 @@ function App() {
         {apiDataJson ? (
           <>
             <CurrentMonth apiDataJson={apiDataJson} />
-            {/* <IncidentCross apiDataJson={apiDataJson} />
+            <IncidentCross apiDataJson={apiDataJson} />
             <IncidentsDaysAgo apiDataJson={apiDataJson} />
-            <IncidentDetails apiDataJson={apiDataJson} /> */}
+            <IncidentDetails apiDataJson={apiDataJson} />
           </>
         ) : (
           <>
@@ -55,34 +56,15 @@ const getIncidentData = async () => {
 
   console.log("process.env is:", process.env);
 
-  // Fetch from API if any environment variables are missing
-  let apiData = {};
-  try {
-    console.log("server is: ", server);
-    const res = await fetch(`${server}/api/incidents/latest`);
-    if (res.ok) {
-      apiData = await res.json();
-    }
-  } catch (error) {
-    console.error("Failed to fetch from API:", error);
-  }
-
   // Combine environment variables, API data, and default values
-  const today = todaysDateOverride
-    ? new Date(todaysDateOverride)
-    : apiData.todaysDateOverride
-    ? new Date(apiData.todaysDateOverride)
-    : new Date();
+  const today = todaysDateOverride ? new Date(todaysDateOverride) : new Date();
 
   const lastIncidentDate = lastIncidentDateOverride
     ? new Date(lastIncidentDateOverride)
-    : new Date(apiData.lastIncidentDate || 0); // Default to epoch if not provided
+    : new Date(0); // Default to epoch if not provided
 
-  const status = statusOverride || apiData.status || "resolved";
-  const detail =
-    lastIncidentDetailOverride ||
-    apiData.lastIncidentDetail ||
-    "No detail provided";
+  const status = statusOverride || "resolved";
+  const detail = lastIncidentDetailOverride || "No detail provided";
 
   const payload = {
     detail: detail,
@@ -94,6 +76,15 @@ const getIncidentData = async () => {
   console.log("payload is: ", payload);
 
   return payload;
+};
+
+const getDefaultIncidentData = () => {
+  return {
+    detail: "No detail provided",
+    lastIncidentDate: new Date(0).toISOString(),
+    todaysDate: new Date(),
+    status: "resolved",
+  };
 };
 
 export default App;
