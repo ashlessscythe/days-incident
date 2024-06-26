@@ -31,10 +31,6 @@ function App() {
     <Router>
       <div className="App">
         <header className="App-header">
-          {/* <nav>
-            <Link to="/">Home</Link>
-            <Link to="/screenshot">Screenshot</Link>
-          </nav> */}
           <Routes>
             <Route path="/" element={<HomePage apiDataJson={apiDataJson} />} />
             <Route path="/screenshot" element={<ScreenshotPage />} />

@@ -1,0 +1,16 @@
+{
+    "sites": [
+        {
+            "siteName": "Site Default",
+            "siteRoute" : "/site1",
+            "targetScreenShotURL": "http://example.com/site1",
+            "lastIncidentDate": "2024-01-01T13:00"
+        },
+        {
+            "siteName": "Additional Site Name",
+            "siteRoute" : "/site2",
+            "targetScreenShotURL": "http://example.com/site2",
+            "lastIncidentDate": "2023-05-26T08:00"
+        }
+    ]
+}
