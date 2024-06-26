@@ -37,6 +37,7 @@ const fetchAndSaveScreenshot = async () => {
           browser: "dark",
         },
       },
+      force: true, // careful to not set interval too high
     });
 
     if (status === "success" && data.screenshot && data.screenshot.url) {
