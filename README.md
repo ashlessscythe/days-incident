@@ -2,7 +2,7 @@
 
 ![](./image.png)
 
-A play on the traditional, _'Days Without Accidents'_ compliance signs, but for Safety incidents.
+Tracker days since last safety incident.
 
 Safety cross will fill in as days progress.
 
@@ -21,6 +21,4 @@ Set `daysAgoOverride` and `todaysDateOverride` in `./ui/mocks/data.json` to test
   }
 }
 
-
-See the `README.MD` of each project (API and UI) for running the application.
 ```
