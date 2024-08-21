@@ -1,18 +1,14 @@
 import React from "react";
 
 const IncidentCross = React.memo(({ data }) => {
-  if (!data || !data.lastIncidentDate) {
-    return <div>Loading incident data</div>;
-  }
   const lastIncidentDate = new Date(data.lastIncidentDate);
   const today = new Date(data.todaysDate);
 
-  // flag if highlight all days of current month up to today
-  const highlightAllDays =
+  // boolean fill before today's date if incident date is previous month
+  const fillBeforeToday =
     lastIncidentDate.getFullYear() < today.getFullYear() ||
-    lastIncidentDate.getMonth() < today.getMonth() ||
     (lastIncidentDate.getFullYear() === today.getFullYear() &&
-      lastIncidentDate.getMonth() < today.getMonth);
+      lastIncidentDate.getMonth() < today.getMonth());
 
   const renderSquares = () => {
     const squares = [];
@@ -30,28 +26,28 @@ const IncidentCross = React.memo(({ data }) => {
     ];
 
     let dayCounter = 1;
-    let stopLoop = false;
+    const daysInMonth = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      0
+    ).getDate();
 
     layout.forEach((row, rowIndex) => {
-      if (stopLoop) return;
       row.forEach((isVisible, colIndex) => {
-        if (stopLoop) return;
         if (isVisible) {
           const isGreen =
-            highlightAllDays ||
-            (dayCounter > lastIncidentDate.getDate() &&
+            (fillBeforeToday && dayCounter <= today.getDate()) ||
+            (!fillBeforeToday &&
+              dayCounter >= lastIncidentDate.getDate() &&
               dayCounter <= today.getDate());
           squares.push(
             <div
               key={`${rowIndex}-${colIndex}`}
               className={`cross-square ${isGreen ? "green" : ""}`}
             >
-              {dayCounter}
+              {dayCounter <= daysInMonth ? dayCounter : ""}
             </div>
           );
-          if (dayCounter === today.getDate()) {
-            stopLoop = true;
-          }
           dayCounter++;
         } else {
           squares.push(

@@ -70,7 +70,7 @@ const getSitesData = () => {
     const name = import.meta.env[`VITE_SITE_${i}_NAME`] || `Site ${i}`;
     const dateStr =
       import.meta.env[`VITE_SITE_${i}_DATE`] || "2024-01-01T00:00";
-    const route = `/${name.toLowerCase().replace(/\s+/g, "-")}`;
+    const route = `/${name.toLowerCase().replace(/\s+/g, "_")}`;
 
     // Ensure the date string is valid
     const lastIncidentDate = new Date(dateStr);

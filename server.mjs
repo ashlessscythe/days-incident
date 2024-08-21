@@ -34,7 +34,7 @@ const getSiteConfigurations = () => {
         siteName: process.env[`VITE_SITE_${i}_NAME`],
         siteRoute: `/${process.env[`VITE_SITE_${i}_NAME`]
           .toLowerCase()
-          .replace(/\s+/g, "-")}`,
+          .replace(/\s+/g, "_")}`,
         lastIncidentDate: process.env[`VITE_SITE_${i}_DATE`],
       };
       sites.push(site);
