@@ -1,8 +1,11 @@
 import React from "react";
 
-const IncidentCross = React.memo(({ apiDataJson }) => {
-  const lastIncidentDate = new Date(apiDataJson.lastIncidentDate);
-  const today = apiDataJson.todaysDate;
+const IncidentCross = React.memo(({ data }) => {
+  if (!data || !data.lastIncidentDate) {
+    return <div>Loading incident data</div>;
+  }
+  const lastIncidentDate = new Date(data.lastIncidentDate);
+  const today = new Date(data.todaysDate);
 
   // flag if highlight all days of current month up to today
   const highlightAllDays =

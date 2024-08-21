@@ -1,10 +1,10 @@
 import React from "react";
 
-const IncidentsDaysAgo = React.memo(({ apiDataJson }) => {
-  const daysAgo = getDaysAgo(
-    apiDataJson.lastIncidentDate,
-    apiDataJson.todaysDate
-  );
+const IncidentsDaysAgo = React.memo(({ data }) => {
+  if (!data || !data.todaysDate || !data.lastIncidentDate) {
+    return <div>Loading incident data...</div>;
+  }
+  const daysAgo = getDaysAgo(data.lastIncidentDate, data.todaysDate);
   const formattedDaysAgo = daysAgo.toLocaleString();
   let text = `Days without safety incidents: ${formattedDaysAgo}`;
 

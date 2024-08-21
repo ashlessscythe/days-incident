@@ -1,7 +1,10 @@
 import React from "react";
 
-const CurrentMonth = React.memo(({ apiDataJson }) => {
-  const currentDate = apiDataJson.todaysDate || new Date();
+const CurrentMonth = React.memo(({ data }) => {
+  if (!data || !data.todaysDate) {
+    return <div>Loading incident data</div>;
+  }
+  const currentDate = new Date(data.todaysDate) || new Date();
   const monthNames = [
     "January",
     "February",

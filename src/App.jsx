@@ -7,23 +7,16 @@ import IncidentDetails from "./components/IncidentDetails";
 import IncidentsDaysAgo from "./components/IncidentsDaysAgo";
 
 function App() {
-  const [apiDataJson, setApiDataJson] = useState(null);
+  const [sitesData, setSitesData] = useState({});
 
   useEffect(() => {
-    const fetchIncidentData = async () => {
-      try {
-        const data = await getIncidentData();
-        console.log("data is: ", data);
-        setApiDataJson(data);
-      } catch (e) {
-        console.error("Failed to fetch incident data:", e);
-        setApiDataJson(getDefaultIncidentData());
-      }
+    const fetchSitesData = () => {
+      const data = getSitesData();
+      setSitesData(data);
     };
 
-    fetchIncidentData();
-    const interval = setInterval(fetchIncidentData, 5000);
-
+    fetchSitesData();
+    const interval = setInterval(fetchSitesData, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -32,8 +25,14 @@ function App() {
       <div className="App">
         <header className="App-header">
           <Routes>
-            <Route path="/" element={<HomePage apiDataJson={apiDataJson} />} />
-            <Route path="/screenshot" element={<ScreenshotPage />} />
+            <Route path="/" element={<HomePage />} />
+            {Object.entries(sitesData).map(([route, site]) => (
+              <Route
+                key={route}
+                path={route}
+                element={<SitePage data={site} />}
+              />
+            ))}
           </Routes>
         </header>
       </div>
@@ -41,88 +40,54 @@ function App() {
   );
 }
 
-const HomePage = ({ apiDataJson }) => {
-  return apiDataJson ? (
-    <>
-      <CurrentMonth apiDataJson={apiDataJson} />
-      <IncidentCross apiDataJson={apiDataJson} />
-      <IncidentsDaysAgo apiDataJson={apiDataJson} />
-      <IncidentDetails apiDataJson={apiDataJson} />
-    </>
-  ) : (
-    <>
-      <div className="spinner-border" role="status">
-        <span className="sr-only">Loading...</span>
-      </div>
-    </>
-  );
-};
-
-const ScreenshotPage = () => {
-  const [screenshotUrl, setScreenshotUrl] = useState(null);
-
-  useEffect(() => {
-    fetch("/screenshot.png")
-      .then((response) => response.blob())
-      .then((blob) => {
-        const url = URL.createObjectURL(blob);
-        setScreenshotUrl(url);
-      })
-      .catch((error) => {
-        console.error("Error fetching screenshot:", error);
-      });
-  }, []);
-
+const HomePage = () => {
   return (
     <div>
-      {screenshotUrl ? (
-        <img src={screenshotUrl} alt="Screenshot" />
-      ) : (
-        <div className="spinner-border" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      )}
+      <h1>Incident Tracker</h1>
+      <p>Please select a site from the navigation menu.</p>
     </div>
   );
 };
 
-const getIncidentData = async () => {
-  const todaysDateOverride = import.meta.env.VITE_TODAYS_DATE_OVERRIDE;
-  const statusOverride = import.meta.env.VITE_STATUS;
-  const lastIncidentDetailOverride = import.meta.env.VITE_LAST_INCIDENT_DETAIL;
-  const lastIncidentDateOverride = import.meta.env.VITE_LAST_INCIDENT_DATE;
-
-  // console.log("process.env is:", process.env);
-
-  // Combine environment variables, API data, and default values
-  const today = todaysDateOverride ? new Date(todaysDateOverride) : new Date();
-
-  const lastIncidentDate = lastIncidentDateOverride
-    ? new Date(lastIncidentDateOverride)
-    : new Date(0); // Default to epoch if not provided
-
-  const status = statusOverride || "resolved";
-  const detail = lastIncidentDetailOverride || "No detail provided";
-
-  const payload = {
-    detail: detail,
-    lastIncidentDate: lastIncidentDate.toISOString(),
-    todaysDate: today,
-    status: status,
-  };
-
-  console.log("payload is: ", payload);
-
-  return payload;
+const SitePage = ({ data }) => {
+  return (
+    <>
+      <h1>{data.name}</h1>
+      <CurrentMonth data={data} />
+      <IncidentCross data={data} />
+      <IncidentsDaysAgo data={data} />
+      <IncidentDetails data={data} />
+    </>
+  );
 };
 
-const getDefaultIncidentData = () => {
-  return {
-    detail: "No detail provided",
-    lastIncidentDate: new Date(0).toISOString(),
-    todaysDate: new Date(),
-    status: "resolved",
-  };
+const getSitesData = () => {
+  const siteCount = parseInt(import.meta.env.VITE_SITE_COUNT, 10) || 0;
+  const sites = {};
+  const today = new Date(); // Use the current date as today's date
+
+  for (let i = 1; i <= siteCount; i++) {
+    const name = import.meta.env[`VITE_SITE_${i}_NAME`] || `Site ${i}`;
+    const dateStr =
+      import.meta.env[`VITE_SITE_${i}_DATE`] || "2024-01-01T00:00";
+    const route = `/${name.toLowerCase().replace(/\s+/g, "-")}`;
+
+    // Ensure the date string is valid
+    const lastIncidentDate = new Date(dateStr);
+    const validLastIncidentDate = !isNaN(lastIncidentDate.getTime())
+      ? lastIncidentDate.toISOString()
+      : new Date("2024-01-01T00:00:00Z").toISOString();
+
+    sites[route] = {
+      name: name,
+      lastIncidentDate: validLastIncidentDate, // str
+      todaysDate: today.toISOString(), // Add today's date
+      status: "resolved", // Add a default status
+      detail: "No details provided", // Add a default detail
+    };
+  }
+
+  return sites;
 };
 
 export default App;
