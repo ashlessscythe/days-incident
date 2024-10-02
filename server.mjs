@@ -32,9 +32,9 @@ const getSiteConfigurations = () => {
     for (let i = 1; i <= envSiteCount; i++) {
       const site = {
         siteName: process.env[`VITE_SITE_${i}_NAME`],
-        siteRoute: `/${process.env[`VITE_SITE_${i}_NAME`]
+        siteRoute: process.env[`VITE_SITE_${i}_NAME`]
           .toLowerCase()
-          .replace(/\s+/g, "_")}`,
+          .replace(/\s+/g, "_"),
         lastIncidentDate: process.env[`VITE_SITE_${i}_DATE`],
       };
       sites.push(site);
@@ -49,34 +49,35 @@ const getSiteConfigurations = () => {
 // Serve static files from the dist directory
 app.use(express.static(distDir));
 
-// Set up routes for each site
+// Disable caching for dynamic content
+app.use((req, res, next) => {
+  res.setHeader(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, proxy-revalidate"
+  );
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  res.setHeader("Surrogate-Control", "no-store");
+  next();
+});
+
 const setupRoutes = () => {
   const sites = getSiteConfigurations();
 
-  if (sites.length === 0) {
-    console.error("No sites found in .env or siteInfo.json");
-    return;
-  }
-
-  sites.forEach((site) => {
-    app.get(site.siteRoute, (req, res) => {
-      res.sendFile(path.join(distDir, "index.html"));
-    });
-  });
-
+  // Log the routes being set up
   console.log(
     "Routes set up for:",
     sites.map((site) => site.siteRoute)
   );
+
+  // Serve index.html for all routes
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(distDir, "index.html"));
+  });
 };
 
 // Set up the routes
 setupRoutes();
-
-// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
-app.get("*", (req, res) => {
-  res.sendFile(path.join(distDir, "index.html"));
-});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

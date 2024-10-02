@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
 import CurrentMonth from "./components/CurrentMonth";
 import IncidentCross from "./components/IncidentCross";
@@ -21,7 +21,7 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <BrowserRouter>
       <div className="App">
         <header className="App-header">
           <Routes>
@@ -29,14 +29,14 @@ function App() {
             {Object.entries(sitesData).map(([route, site]) => (
               <Route
                 key={route}
-                path={route}
+                path={route.substring(1)} // Remove leading slash
                 element={<SitePage data={site} />}
               />
             ))}
           </Routes>
         </header>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 
