@@ -53,9 +53,9 @@ const SitePage = ({ data }) => {
   return (
     <>
       <h1>{data.name}</h1>
-      <CurrentMonth data={data} />
-      <IncidentCross data={data} />
       <IncidentsDaysAgo data={data} />
+      <IncidentCross data={data} />
+      <CurrentMonth data={data} />
       <IncidentDetails data={data} />
     </>
   );

@@ -55,9 +55,10 @@ p.body-text {
   justify-content: center;
   align-items: center;
   margin: 2vh auto;
-  width: min(70vw, 60vh);
-  max-width: 600px;
+  width: min(60vw, 50vh);
+  max-width: 500px;
   aspect-ratio: 8/10;
+  margin-bottom: 4vh; /* Adds space below the chart */
 }
 
 .cross-square {
