@@ -18,58 +18,63 @@
 
 .App-header {
   background-color: #2c3e50;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(25px + 2vmin);
+  padding: 2vh;
+  box-sizing: border-box;
   color: white;
 }
 
 p.body-month {
-  font-style: italic;
-  margin-bottom: 1em;
+  font-size: calc(20px + 1vmin);
+  margin: 1vh 0;
 }
 
 p.body-title {
-  font-style: italic;
-  margin-bottom: 1em;
+  font-size: calc(20px + 1vmin);
+  margin: 1vh 0;
 }
 
 p.body-subtitle {
-  font-weight: light;
-  font-size: calc(7px + 2vmin);
+  font-size: calc(16px + 1vmin);
+  margin: 1vh 0;
 }
 
 p.body-text {
-  font-weight: lighter;
-  font-size: calc(5px + 2vmin);
+  font-size: calc(16px + 1vmin);
+  margin: 1vh 0;
 }
 
 .incident-chart {
   display: grid;
-  grid-template-columns: repeat(8, 40px);
-  grid-template-rows: repeat(10, 40px);
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 5px;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
+  margin: 2vh auto;
+  width: min(70vw, 60vh);
+  max-width: 600px;
+  aspect-ratio: 8/10;
 }
 
 .cross-square {
-  width: 40px;
-  height: 40px;
-  background-color: lightgray;
-  border: 1px solid #ccc;
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: #d3d3d3;
+  border: 2px solid #bbb;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: calc(14px + 0.5vmin);
+  font-weight: bold;
 }
 
 .cross-square.green {
-  background-color: green;
+  background-color: #2ecc71;
+  color: white;
 }
 
 .cross-square.hidden {
