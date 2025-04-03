@@ -18,73 +18,73 @@
 
 .App-header {
   background-color: #2c3e50;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 1vh;
+  justify-content: flex-start;
+  padding: 1vh 1vh 2vh 1vh;
   box-sizing: border-box;
   color: white;
   overflow-y: auto;
 }
 
 p.body-month {
-  font-size: clamp(24px, calc(24px + 2vmin), 48px);
-  margin: 0.5vh 0;
+  font-size: clamp(22px, calc(20px + 1.5vmin), 38px);
+  margin: 0.2vh 0;
   font-weight: bold;
-  line-height: 1.2;
+  line-height: 1;
 }
 
 p.body-title {
-  font-size: clamp(24px, calc(24px + 2vmin), 48px);
-  margin: 0.5vh 0;
+  font-size: clamp(22px, calc(20px + 1.5vmin), 38px);
+  margin: 0.2vh 0;
   font-weight: bold;
-  line-height: 1.2;
+  line-height: 1;
 }
 
 p.body-subtitle {
-  font-size: clamp(20px, calc(20px + 1vmin), 36px);
-  margin: 0.5vh 0;
-  line-height: 1.2;
+  font-size: clamp(18px, calc(16px + 1vmin), 30px);
+  margin: 0.2vh 0;
+  line-height: 1;
 }
 
 p.body-text {
-  font-size: clamp(20px, calc(20px + 1vmin), 36px);
-  margin: 0.5vh 0;
-  line-height: 1.2;
+  font-size: clamp(18px, calc(16px + 1vmin), 30px);
+  margin: 0.2vh 0;
+  line-height: 1;
 }
 
 .incident-chart {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 6px;
+  gap: 4px;
   justify-content: center;
   align-items: center;
-  margin: 1.5vh auto;
-  width: min(75vw, 65vh);
-  max-width: 700px;
+  margin: 0.8vh auto;
+  width: min(65vw, 55vh);
+  max-width: 600px;
   aspect-ratio: 8/10;
-  margin-bottom: 1.5vh; /* Adds space below the chart */
+  margin-bottom: 0.8vh;
 }
 
 .cross-square {
   width: 100%;
   aspect-ratio: 1;
   background-color: #d3d3d3;
-  border: 2px solid #bbb;
+  border: 1px solid #bbb; /* Reduced border width to fix ghosting */
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: clamp(16px, calc(14px + 1.2vmin), 32px);
+  font-size: clamp(14px, calc(12px + 0.8vmin), 26px);
   font-weight: bold;
-  border-radius: 4px;
+  border-radius: 2px; /* Reduced border radius */
 }
 
 .cross-square.green {
   background-color: #2ecc71;
   color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: none; /* Removed box-shadow to fix ghosting */
 }
 
 .cross-square.hidden {
@@ -110,17 +110,21 @@ p.body-text {
 }
 
 /* Ensure responsive layout for smaller screens */
-@media (max-height: 700px) {
+@media (max-height: 800px) {
   .incident-chart {
-    width: min(70vw, 60vh);
-    margin: 1vh auto;
-    gap: 4px;
+    width: min(60vw, 50vh);
+    margin: 0.6vh auto;
+    gap: 3px;
   }
 
   p.body-month,
   p.body-title {
-    font-size: clamp(22px, calc(20px + 1.5vmin), 40px);
-    margin: 0.5vh 0;
+    font-size: clamp(20px, calc(18px + 1.2vmin), 34px);
+    margin: 0.2vh 0;
+  }
+
+  .App-header {
+    padding-top: 1.5vh;
   }
 }
 
@@ -134,20 +138,70 @@ p.body-text {
 }
 
 /* Compact layout for very small screens */
-@media (max-height: 500px) {
+@media (max-height: 600px) {
   .incident-chart {
-    width: min(65vw, 55vh);
-    margin: 0.5vh auto;
-    gap: 3px;
+    width: min(55vw, 45vh);
+    margin: 0.4vh auto;
+    gap: 2px;
   }
 
   p.body-month,
   p.body-title {
-    font-size: clamp(20px, calc(18px + 1vmin), 32px);
-    margin: 0.3vh 0;
+    font-size: clamp(16px, calc(14px + 1vmin), 28px);
+    margin: 0.1vh 0;
   }
 
   .cross-square {
-    font-size: clamp(14px, calc(12px + 0.8vmin), 24px);
+    font-size: clamp(12px, calc(10px + 0.6vmin), 20px);
+  }
+
+  .App-header {
+    padding-top: 0.5vh;
+    padding-bottom: 1vh;
+    justify-content: flex-start;
+  }
+}
+
+/* Fix for 100% scaling where bottom text might be cut off */
+@media (min-height: 600px) and (max-height: 900px) {
+  .App-header {
+    justify-content: flex-start;
+    padding-top: 1vh;
+    padding-bottom: 3vh;
+  }
+
+  .incident-chart {
+    margin-top: 0.4vh;
+    margin-bottom: 0.4vh;
+    width: min(60vw, 50vh);
+  }
+
+  p.body-month,
+  p.body-title {
+    margin: 0.1vh 0;
+  }
+}
+
+/* Specific fix for the exact height where text is cut off */
+@media (min-height: 700px) and (max-height: 800px) {
+  .App-header {
+    padding-bottom: 4vh;
+  }
+
+  .incident-chart {
+    width: min(58vw, 48vh);
+    margin: 0.3vh auto;
+  }
+
+  p.body-month,
+  p.body-title {
+    font-size: clamp(18px, calc(16px + 1.2vmin), 32px);
+  }
+}
+
+/* Fix for zoom levels that might cause text to overlap with cross */
+@media (max-width: 1200px) {
+  .current-month {
+    margin-top: 1vh;
   }
 }
