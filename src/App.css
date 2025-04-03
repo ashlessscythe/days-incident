@@ -18,47 +18,54 @@
 
 .App-header {
   background-color: #2c3e50;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2vh;
+  padding: 1vh;
   box-sizing: border-box;
   color: white;
+  overflow-y: auto;
 }
 
 p.body-month {
-  font-size: calc(20px + 1vmin);
-  margin: 1vh 0;
+  font-size: clamp(24px, calc(24px + 2vmin), 48px);
+  margin: 0.5vh 0;
+  font-weight: bold;
+  line-height: 1.2;
 }
 
 p.body-title {
-  font-size: calc(20px + 1vmin);
-  margin: 1vh 0;
+  font-size: clamp(24px, calc(24px + 2vmin), 48px);
+  margin: 0.5vh 0;
+  font-weight: bold;
+  line-height: 1.2;
 }
 
 p.body-subtitle {
-  font-size: calc(16px + 1vmin);
-  margin: 1vh 0;
+  font-size: clamp(20px, calc(20px + 1vmin), 36px);
+  margin: 0.5vh 0;
+  line-height: 1.2;
 }
 
 p.body-text {
-  font-size: calc(16px + 1vmin);
-  margin: 1vh 0;
+  font-size: clamp(20px, calc(20px + 1vmin), 36px);
+  margin: 0.5vh 0;
+  line-height: 1.2;
 }
 
 .incident-chart {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 5px;
+  gap: 6px;
   justify-content: center;
   align-items: center;
-  margin: 2vh auto;
-  width: min(60vw, 50vh);
-  max-width: 500px;
+  margin: 1.5vh auto;
+  width: min(75vw, 65vh);
+  max-width: 700px;
   aspect-ratio: 8/10;
-  margin-bottom: 4vh; /* Adds space below the chart */
+  margin-bottom: 1.5vh; /* Adds space below the chart */
 }
 
 .cross-square {
@@ -69,13 +76,15 @@ p.body-text {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: calc(14px + 0.5vmin);
+  font-size: clamp(16px, calc(14px + 1.2vmin), 32px);
   font-weight: bold;
+  border-radius: 4px;
 }
 
 .cross-square.green {
   background-color: #2ecc71;
   color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .cross-square.hidden {
@@ -97,5 +106,48 @@ p.body-text {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Ensure responsive layout for smaller screens */
+@media (max-height: 700px) {
+  .incident-chart {
+    width: min(70vw, 60vh);
+    margin: 1vh auto;
+    gap: 4px;
+  }
+
+  p.body-month,
+  p.body-title {
+    font-size: clamp(22px, calc(20px + 1.5vmin), 40px);
+    margin: 0.5vh 0;
+  }
+}
+
+/* Ensure text doesn't get cut off */
+.incidents-days-ago,
+.current-month {
+  width: 100%;
+  padding: 0 5px;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+/* Compact layout for very small screens */
+@media (max-height: 500px) {
+  .incident-chart {
+    width: min(65vw, 55vh);
+    margin: 0.5vh auto;
+    gap: 3px;
+  }
+
+  p.body-month,
+  p.body-title {
+    font-size: clamp(20px, calc(18px + 1vmin), 32px);
+    margin: 0.3vh 0;
+  }
+
+  .cross-square {
+    font-size: clamp(14px, calc(12px + 0.8vmin), 24px);
   }
 }
