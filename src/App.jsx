@@ -68,22 +68,29 @@ const getSitesData = () => {
 
   for (let i = 1; i <= siteCount; i++) {
     const name = import.meta.env[`VITE_SITE_${i}_NAME`] || `Site ${i}`;
-    const dateStr =
-      import.meta.env[`VITE_SITE_${i}_DATE`] || "2024-01-01T00:00";
+    const recordableDateStr = import.meta.env[`VITE_SITE_${i}_RECORDABLE_DATE`] || "2024-01-01T00:00";
+    const nonOshaDateStr = import.meta.env[`VITE_SITE_${i}_NON_OSHA_DATE`] || "2024-01-01T00:00";
     const route = `/${name.toLowerCase().replace(/\s+/g, "_")}`;
 
-    // Ensure the date string is valid
-    const lastIncidentDate = new Date(dateStr);
-    const validLastIncidentDate = !isNaN(lastIncidentDate.getTime())
-      ? lastIncidentDate.toISOString()
+    // Ensure the date strings are valid
+    const lastRecordableDate = new Date(recordableDateStr);
+    const lastNonOshaDate = new Date(nonOshaDateStr);
+    
+    const validLastRecordableDate = !isNaN(lastRecordableDate.getTime())
+      ? lastRecordableDate.toISOString()
+      : new Date("2024-01-01T00:00:00Z").toISOString();
+      
+    const validLastNonOshaDate = !isNaN(lastNonOshaDate.getTime())
+      ? lastNonOshaDate.toISOString()
       : new Date("2024-01-01T00:00:00Z").toISOString();
 
     sites[route] = {
       name: name,
-      lastIncidentDate: validLastIncidentDate, // str
-      todaysDate: today.toISOString(), // Add today's date
-      status: "resolved", // Add a default status
-      detail: "No details provided", // Add a default detail
+      lastRecordableDate: validLastRecordableDate,
+      lastNonOshaDate: validLastNonOshaDate,
+      todaysDate: today.toISOString(),
+      status: "resolved",
+      detail: "No details provided",
     };
   }
 

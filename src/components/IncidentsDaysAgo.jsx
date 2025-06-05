@@ -1,16 +1,28 @@
 import React from "react";
 
 const IncidentsDaysAgo = React.memo(({ data }) => {
-  if (!data || !data.todaysDate || !data.lastIncidentDate) {
+  if (!data || !data.todaysDate || !data.lastRecordableDate || !data.lastNonOshaDate) {
     return <div>Loading incident data...</div>;
   }
-  const daysAgo = getDaysAgo(data.lastIncidentDate, data.todaysDate);
-  const formattedDaysAgo = daysAgo.toLocaleString();
-  let text = `Days without safety incidents: ${formattedDaysAgo}`;
-
+  const recordableDaysAgo = getDaysAgo(data.lastRecordableDate, data.todaysDate);
+  const nonOshaDaysAgo = getDaysAgo(data.lastNonOshaDate, data.todaysDate);
+  
   return (
     <div className="incidents-days-ago">
-      <p className="body-title">{text}</p>
+      <table className="days-table">
+        <thead>
+          <tr>
+            <th>Recordable</th>
+            <th>Non-Recordable</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{recordableDaysAgo.toLocaleString()}</td>
+            <td>{nonOshaDaysAgo.toLocaleString()}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 });

@@ -43,14 +43,18 @@ Create a `.env` file in the root of your project and add the following variables
 
 ```bash
 PORT=3000
-VITE_SITE_1_DATE=2024-02-15T07:00
 VITE_SITE_1_NAME=Alpha Site
-VITE_SITE_2_DATE=2024-03-01T07:00
+VITE_SITE_1_RECORDABLE_DATE=2024-02-15T07:00
+VITE_SITE_1_NON_OSHA_DATE=2024-03-01T07:00
 VITE_SITE_2_NAME=Beta Manufacturing
-VITE_SITE_3_DATE=2024-04-22T07:00
+VITE_SITE_2_RECORDABLE_DATE=2024-03-01T07:00
+VITE_SITE_2_NON_OSHA_DATE=2024-04-22T07:00
 VITE_SITE_3_NAME=Gamma Logistics
-VITE_SITE_4_DATE=2024-05-10T07:00
+VITE_SITE_3_RECORDABLE_DATE=2024-04-22T07:00
+VITE_SITE_3_NON_OSHA_DATE=2024-05-10T07:00
 VITE_SITE_4_NAME=Delta Tech
+VITE_SITE_4_RECORDABLE_DATE=2024-05-10T07:00
+VITE_SITE_4_NON_OSHA_DATE=2024-06-01T07:00
 VITE_SITE_COUNT=4
 ```
 
@@ -84,6 +88,33 @@ The build artifacts will be stored in the `build/` directory.
 - **IncidentCross.jsx:** Generates the cross pattern of green squares.
 - **IncidentDetails.jsx:** Displays additional details about the incidents.
 - **IncidentsDaysAgo.jsx:** Calculates and shows how many days ago the last incident occurred.
+
+## Environment Variables
+
+The application uses the following environment variables, which should be set in your `.env` file (see `.env.example` for a template):
+
+- `PORT`: The port the server runs on (default: "3000").
+- `VITE_SITE_COUNT`: Number of sites to track.
+- `VITE_SITE_X_NAME`: Name of site X (replace X with the site number, e.g., 1, 2, 3, ...).
+- `VITE_SITE_X_RECORDABLE_DATE`: Last recordable incident date for site X (format: "YYYY-MM-DDTHH:MM").
+- `VITE_SITE_X_NON_OSHA_DATE`: Last non-OSHA incident date for site X (format: "YYYY-MM-DDTHH:MM").
+
+Example:
+```env
+VITE_SITE_1_NAME="Alpha Site"
+VITE_SITE_1_RECORDABLE_DATE="2024-02-15T07:00"
+VITE_SITE_1_NON_OSHA_DATE="2024-03-01T07:00"
+```
+
+## Cross Example
+
+Below is an example of the cross visualization used to represent days since the last incident. Each square represents a day in the current month, with colors indicating recordable and non-recordable days.
+
+![Cross Example](public/branding/cross_example.png)
+
+- **Green squares**: Days without recordable incidents
+- **Blue squares**: Days without non-OSHA incidents
+- **Gray squares**: Not part of the cross or not in the current month
 
 ## Contributing
 

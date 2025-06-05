@@ -1,14 +1,15 @@
 import React from "react";
 
 const IncidentCross = React.memo(({ data }) => {
-  const lastIncidentDate = new Date(data.lastIncidentDate);
+  const lastRecordableDate = new Date(data.lastRecordableDate);
+  const lastNonOshaDate = new Date(data.lastNonOshaDate);
   const today = new Date(data.todaysDate);
 
   // boolean fill before today's date if incident date is previous month
   const fillBeforeToday =
-    lastIncidentDate.getFullYear() < today.getFullYear() ||
-    (lastIncidentDate.getFullYear() === today.getFullYear() &&
-      lastIncidentDate.getMonth() < today.getMonth());
+    lastRecordableDate.getFullYear() < today.getFullYear() ||
+    (lastRecordableDate.getFullYear() === today.getFullYear() &&
+      lastRecordableDate.getMonth() < today.getMonth());
 
   const renderSquares = () => {
     const squares = [];
@@ -35,15 +36,29 @@ const IncidentCross = React.memo(({ data }) => {
     layout.forEach((row, rowIndex) => {
       row.forEach((isVisible, colIndex) => {
         if (isVisible) {
-          const isGreen =
+          const isRecordable =
             (fillBeforeToday && dayCounter <= today.getDate()) ||
             (!fillBeforeToday &&
-              dayCounter >= lastIncidentDate.getDate() &&
+              dayCounter >= lastRecordableDate.getDate() &&
               dayCounter <= today.getDate());
+              
+          const isNonOsha =
+            (fillBeforeToday && dayCounter <= today.getDate()) ||
+            (!fillBeforeToday &&
+              dayCounter >= lastNonOshaDate.getDate() &&
+              dayCounter <= today.getDate());
+
+          let squareClass = "cross-square";
+          if (isRecordable) {
+            squareClass += " green";
+          } else if (isNonOsha) {
+            squareClass += " blue";
+          }
+
           squares.push(
             <div
               key={`${rowIndex}-${colIndex}`}
-              className={`cross-square ${isGreen ? "green" : ""}`}
+              className={squareClass}
             >
               {dayCounter <= daysInMonth ? dayCounter : ""}
             </div>

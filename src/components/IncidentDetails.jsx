@@ -1,13 +1,16 @@
 import React from "react";
 
 const IncidentDetails = React.memo(({ data }) => {
-  if (!data || !data.lastIncidentDate) {
+  if (!data || !data.lastRecordableDate || !data.lastNonOshaDate) {
     return <div>Loading incident data....</div>;
   }
   return (
     <div className="incident-details">
       <p className="body-text">
-        Last Incident date: {GetFormattedDate(data.lastIncidentDate)}
+        Last Recordable Incident: {GetFormattedDate(data.lastRecordableDate)}
+      </p>
+      <p className="body-text">
+        Last Non-OSHA Incident: {GetFormattedDate(data.lastNonOshaDate)}
       </p>
     </div>
   );
