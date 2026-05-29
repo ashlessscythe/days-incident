@@ -1,105 +1,160 @@
+/* 10-foot interface: fits entirely within viewport at 100% zoom */
+
+:root {
+  --bg: #1a2332;
+  --text: #f5f6f8;
+  --text-muted: #b8c0cc;
+  --safe-green: #2ecc71;
+  --safe-green-dim: #27ae60;
+  --safe-blue: #5dade2;
+  --safe-blue-dim: #2980b9;
+  --cross-empty: #4a5568;
+  --cross-border: #2d3748;
+
+  /* Scale type with viewport height so stacks fit at 100% zoom */
+  --site-title: clamp(1.5rem, 4.5vh, 3.25rem);
+  --days-value: clamp(2.25rem, 10vh, 6.5rem);
+  --days-label: clamp(0.9rem, 2.2vh, 1.5rem);
+  --days-unit: clamp(0.75rem, 1.8vh, 1.25rem);
+  --month: clamp(1rem, 2.8vh, 1.75rem);
+  --detail: clamp(0.75rem, 1.6vh, 1.1rem);
+  --cross-cell: clamp(0.65rem, 1.8vh, 1.35rem);
+
+  /* Space reserved above/below the cross (title + stats + month + footer + gaps) */
+  --chrome: 17.5rem;
+}
+
 .App {
+  height: 100%;
   text-align: center;
 }
 
-.App-logo-spin {
-  animation: App-logo-spin infinite 10s linear;
-  height: 30vmin;
-  pointer-events: none;
-  margin-bottom: 1em;
-}
-
-.App-logo-spin-circular {
-  animation: App-logo-spin-circular infinite 10s linear;
-  height: 30vmin;
-  pointer-events: none;
-  margin-bottom: 1em;
-}
-
 .App-header {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  min-height: 100vh;
+  background: var(--bg);
+  height: 100dvh;
+  max-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding: 2vh 2vh 2vh 2vh;
+  justify-content: center;
+  padding: clamp(0.35rem, 1vh, 0.75rem) clamp(0.5rem, 2vw, 1rem);
   box-sizing: border-box;
-  color: white;
+  color: var(--text);
   overflow: hidden;
 }
 
-p.body-month {
-  font-size: clamp(18px, calc(16px + 1vmin), 28px);
-  margin: 1vh 0;
-  font-weight: bold;
-  line-height: 1.2;
-  color: #f8f9fa; /* Bright white for month text */
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Stronger shadow for month text */
-  letter-spacing: 0.5px; /* Slight letter spacing for elegance */
-}
-
-p.body-title {
-  font-size: clamp(18px, calc(16px + 1vmin), 28px);
-  margin: 0.1vh 0;
-  font-weight: bold;
-  line-height: 1;
-}
-
-p.body-subtitle {
-  font-size: clamp(16px, calc(14px + 0.8vmin), 24px);
-  margin: 0.1vh 0;
-  line-height: 1;
-}
-
-p.body-text {
-  font-size: clamp(16px, calc(14px + 0.8vmin), 24px);
-  margin: 0.5vh 0;
-  line-height: 1.4;
-  color: #ecf0f1; /* Lighter color for better readability */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
-}
-
-.incident-chart {
-  display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 3px;
-  justify-content: center;
+.site-page {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin: 0.4vh auto;
-  width: min(60vw, 50vh);
-  max-width: 500px;
-  aspect-ratio: 8/10;
-  margin-bottom: 2vh; /* Increased bottom margin to prevent overlap */
+  justify-content: space-between;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  width: 100%;
+  gap: clamp(0.15rem, 0.6vh, 0.5rem);
+  overflow: hidden;
+}
+
+.site-title {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: var(--site-title);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.loading {
+  font-size: var(--days-label);
+  color: var(--text-muted);
+}
+
+.days-hero {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(1.5rem, 6vw, 4rem);
+  width: 100%;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.days-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.days-label {
+  font-size: var(--days-label);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+}
+
+.days-value {
+  font-size: var(--days-value);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.days-unit {
+  font-size: var(--days-unit);
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: lowercase;
+  line-height: 1.1;
+}
+
+/* Cross: height capped from remaining viewport so footer is never clipped */
+.incident-chart {
+  --chart-max-h: min(34dvh, calc(100dvh - var(--chrome)));
+  --chart-w: min(70vw, 680px, calc(var(--chart-max-h) * 0.8));
+  width: var(--chart-w);
+  height: min(var(--chart-max-h), calc(var(--chart-w) * 1.25));
+  flex: 0 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: clamp(2px, 0.35vmin, 5px);
+  margin: 0 auto;
+  aspect-ratio: 8 / 10;
 }
 
 .cross-square {
   width: 100%;
-  aspect-ratio: 1;
-  background-color: #d3d3d3;
-  border: 1px solid #bbb;
+  height: 100%;
+  min-height: 0;
+  background-color: var(--cross-empty);
+  border: 1px solid var(--cross-border);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: clamp(14px, calc(12px + 0.8vmin), 26px);
-  font-weight: bold;
-  border-radius: 4px;
-  transition: all 0.2s ease; /* Smooth transitions for better UX */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  font-size: var(--cross-cell);
+  font-weight: 700;
+  border-radius: 3px;
+  color: var(--text-muted);
 }
 
 .cross-square.green {
-  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-  color: white;
-  box-shadow: 0 3px 6px rgba(46, 204, 113, 0.3);
-  transform: scale(1.02); /* Slight scale to make active squares stand out */
+  background: var(--safe-green);
+  border-color: var(--safe-green-dim);
+  color: #fff;
 }
 
 .cross-square.blue {
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-  color: white;
-  box-shadow: 0 3px 6px rgba(52, 152, 219, 0.3);
-  transform: scale(1.02); /* Slight scale to make active squares stand out */
+  background: var(--safe-blue);
+  border-color: var(--safe-blue-dim);
+  color: #fff;
 }
 
 .cross-square.hidden {
@@ -107,217 +162,66 @@ p.body-text {
 }
 
 .current-month {
-  margin-top: 1vh; /* Add top margin to current month container */
-  margin-bottom: 1vh; /* Add bottom margin for better spacing */
+  margin: 0;
+  flex-shrink: 0;
+  line-height: 1.1;
+}
+
+.body-month {
+  margin: 0;
+  font-size: var(--month);
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.03em;
 }
 
 .incident-details {
-  margin-top: 1vh;
-  margin-bottom: 1vh;
-  padding: 1vh 0; /* Add padding for better spacing */
-  background: rgba(255, 255, 255, 0.05); /* Subtle background */
-  border-radius: 8px; /* Rounded corners */
-  backdrop-filter: blur(10px); /* Glass effect */
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.75rem, 3vw, 2rem);
+  font-size: var(--detail);
+  line-height: 1.2;
+  color: var(--text-muted);
 }
 
-/* Responsive design improvements */
-@media (max-width: 768px) {
-  .incident-chart {
-    width: min(80vw, 60vh);
-    margin-bottom: 3vh; /* More space on mobile */
-  }
-
-  .App-header {
-    padding: 1vh 1vh 1vh 1vh; /* Less padding on mobile */
-  }
+.incident-details p {
+  margin: 0;
 }
 
-/* Zoom level adjustments */
-@media (max-zoom: 0.9) {
-  .incident-chart {
-    margin-bottom: 3vh; /* Extra space at lower zoom levels */
-  }
-
-  .current-month {
-    margin-top: 2vh;
-    margin-bottom: 2vh;
-  }
+.detail-label {
+  font-weight: 600;
+  margin-right: 0.4em;
+  color: var(--text);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}
-
-@keyframes App-logo-spin-circular {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Ensure responsive layout for smaller screens */
+/* Short displays (720p, laptop at 100%) */
 @media (max-height: 800px) {
-  .incident-chart {
-    width: min(55vw, 45vh);
-    margin: 0.3vh auto;
-    gap: 2px;
-  }
-
-  .days-table {
-    width: min(55vw, 45vh);
-    margin: 0.3vh auto;
-    font-size: clamp(14px, calc(12px + 0.6vmin), 20px);
-  }
-
-  p.body-month,
-  p.body-title {
-    font-size: clamp(16px, calc(14px + 0.8vmin), 22px);
-    margin: 0.1vh 0;
-  }
-}
-
-/* Compact layout for very small screens */
-@media (max-height: 600px) {
-  .incident-chart {
-    width: min(50vw, 40vh);
-    margin: 0.2vh auto;
-    gap: 1px;
-  }
-
-  .days-table {
-    width: min(50vw, 40vh);
-    margin: 0.2vh auto;
-    font-size: clamp(12px, calc(10px + 0.4vmin), 18px);
-  }
-
-  p.body-month,
-  p.body-title {
-    font-size: clamp(14px, calc(12px + 0.6vmin), 20px);
-    margin: 0.1vh 0;
-  }
-
-  .cross-square {
-    font-size: clamp(10px, calc(8px + 0.4vmin), 16px);
-  }
-}
-
-/* Fix for 100% scaling where bottom text might be cut off */
-@media (min-height: 600px) and (max-height: 900px) {
-  .App-header {
-    justify-content: flex-start;
-    padding-top: 1vh;
-    padding-bottom: 3vh;
+  :root {
+    --chrome: 15rem;
+    --days-value: clamp(2rem, 9vh, 5rem);
+    --site-title: clamp(1.25rem, 4vh, 2.5rem);
   }
 
   .incident-chart {
-    margin-top: 0.4vh;
-    margin-bottom: 0.4vh;
-    width: min(60vw, 50vh);
-  }
-
-  p.body-month,
-  p.body-title {
-    margin: 0.1vh 0;
+    --chart-max-h: min(30dvh, calc(100dvh - var(--chrome)));
   }
 }
 
-/* Specific fix for the exact height where text is cut off */
-@media (min-height: 700px) and (max-height: 800px) {
-  .App-header {
-    padding-bottom: 4vh;
+@media (max-height: 650px) {
+  :root {
+    --chrome: 13rem;
+    --days-value: clamp(1.75rem, 8vh, 4rem);
+  }
+
+  .days-hero {
+    gap: clamp(1rem, 4vw, 2rem);
   }
 
   .incident-chart {
-    width: min(58vw, 48vh);
-    margin: 0.3vh auto;
-  }
-
-  p.body-month,
-  p.body-title {
-    font-size: clamp(18px, calc(16px + 1.2vmin), 32px);
-  }
-}
-
-/* Fix for zoom levels that might cause text to overlap with cross */
-@media (max-width: 1200px) {
-  .current-month {
-    margin-top: 1vh;
-  }
-}
-
-.days-table {
-  width: min(60vw, 50vh);
-  max-width: 500px;
-  margin: 0.4vh auto;
-  border-collapse: collapse;
-  font-size: clamp(16px, calc(14px + 0.8vmin), 24px);
-}
-
-.days-table th,
-.days-table td {
-  padding: 0.3em;
-  text-align: center;
-  border: 1px solid #bbb;
-}
-
-.days-table th {
-  background-color: #2c3e50;
-  color: white;
-  font-weight: bold;
-}
-
-.days-table td {
-  background-color: #34495e;
-  color: white;
-}
-
-/* Ensure responsive layout for smaller screens */
-@media (max-height: 800px) {
-  .incident-chart {
-    width: min(60vw, 50vh);
-    margin: 0.6vh auto;
-    gap: 3px;
-  }
-
-  p.body-month,
-  p.body-title {
-    font-size: clamp(20px, calc(18px + 1.2vmin), 34px);
-    margin: 0.2vh 0;
-  }
-
-  .App-header {
-    padding-top: 1.5vh;
-  }
-}
-
-/* Compact layout for very small screens */
-@media (max-height: 600px) {
-  .incident-chart {
-    width: min(55vw, 45vh);
-    margin: 0.4vh auto;
-    gap: 2px;
-  }
-
-  p.body-month,
-  p.body-title {
-    font-size: clamp(16px, calc(14px + 1vmin), 28px);
-    margin: 0.1vh 0;
-  }
-
-  .cross-square {
-    font-size: clamp(12px, calc(10px + 0.6vmin), 20px);
-  }
-
-  .App-header {
-    padding-top: 0.5vh;
-    padding-bottom: 1vh;
-    justify-content: flex-start;
+    --chart-max-h: min(28dvh, calc(100dvh - var(--chrome)));
   }
 }

@@ -24,7 +24,7 @@ const CurrentMonth = React.memo(({ data }) => {
   const text = `${currentMonth} ${currentYear}`;
   return (
     <div className="current-month">
-      <p className="body-month">{text}</p>
+      <p className="body-month" aria-label="Current month">{text}</p>
     </div>
   );
 });

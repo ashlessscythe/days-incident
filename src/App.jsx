@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import CurrentMonth from "./components/CurrentMonth";
 import IncidentCross from "./components/IncidentCross";
@@ -51,13 +51,13 @@ const HomePage = () => {
 
 const SitePage = ({ data }) => {
   return (
-    <>
-      <h1>{data.name}</h1>
+    <main className="site-page">
+      <h1 className="site-title">{data.name}</h1>
       <IncidentsDaysAgo data={data} />
       <IncidentCross data={data} />
       <CurrentMonth data={data} />
       <IncidentDetails data={data} />
-    </>
+    </main>
   );
 };
 

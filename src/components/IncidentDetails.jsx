@@ -2,26 +2,27 @@ import React from "react";
 
 const IncidentDetails = React.memo(({ data }) => {
   if (!data || !data.lastRecordableDate || !data.lastNonOshaDate) {
-    return <div>Loading incident data....</div>;
+    return null;
   }
   return (
-    <div className="incident-details">
-      <p className="body-text">
-        Last Recordable Incident: {GetFormattedDate(data.lastRecordableDate)}
+    <footer className="incident-details">
+      <p>
+        <span className="detail-label">Recordable</span>
+        {formatDate(data.lastRecordableDate)}
       </p>
-      <p className="body-text">
-        Last Non-OSHA Incident: {GetFormattedDate(data.lastNonOshaDate)}
+      <p>
+        <span className="detail-label">Non-recordable</span>
+        {formatDate(data.lastNonOshaDate)}
       </p>
-    </div>
+    </footer>
   );
 });
 
-function GetFormattedDate(datestr) {
-  const dateTime = new Date(datestr);
-
-  const year = dateTime.getFullYear();
-  const month = (dateTime.getMonth() + 1).toString().padStart(2, "0");
-  const day = dateTime.getDate().toString().padStart(2, "0");
+function formatDate(datestr) {
+  const d = new Date(datestr);
+  const year = d.getFullYear();
+  const month = (d.getMonth() + 1).toString().padStart(2, "0");
+  const day = d.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
 
