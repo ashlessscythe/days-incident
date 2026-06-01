@@ -5,6 +5,7 @@ import CurrentMonth from "./components/CurrentMonth";
 import IncidentCross from "./components/IncidentCross";
 import IncidentDetails from "./components/IncidentDetails";
 import IncidentsDaysAgo from "./components/IncidentsDaysAgo";
+import HomePage from "./components/HomePage";
 
 function App() {
   const [sitesData, setSitesData] = useState({});
@@ -39,15 +40,6 @@ function App() {
     </BrowserRouter>
   );
 }
-
-const HomePage = () => {
-  return (
-    <div>
-      <h1>Incident Tracker</h1>
-      <p>Please select a site from the navigation menu.</p>
-    </div>
-  );
-};
 
 const SitePage = ({ data }) => {
   return (

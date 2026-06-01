@@ -198,6 +198,113 @@
   color: var(--text);
 }
 
+/* Landing demo */
+.home-demo .home-tagline {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: var(--days-unit);
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.home-cross-wrap {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-demo .home-tagline,
+  .home-demo .days-hero,
+  .home-demo .home-cross-wrap,
+  .home-demo .current-month,
+  .home-demo .incident-details {
+    animation: home-rise-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .home-demo .days-hero {
+    animation-delay: 0.08s;
+  }
+
+  .home-demo .home-cross-wrap {
+    animation-delay: 0.16s;
+  }
+
+  .home-demo .current-month {
+    animation-delay: 0.28s;
+  }
+
+  .home-demo .incident-details {
+    animation-delay: 0.36s;
+  }
+
+  .home-demo .incident-chart {
+    animation: home-chart-pop 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+  }
+
+  .home-demo .days-value {
+    animation: home-stat-pulse 3.5s ease-in-out 1s infinite;
+  }
+
+  .home-demo .cross-square:not(.hidden) {
+    animation: home-cell-glow 4s ease-in-out infinite;
+  }
+
+  .home-demo .cross-square.green {
+    animation-delay: calc(var(--cell-i, 0) * 45ms);
+  }
+
+  .home-demo .cross-square.blue {
+    animation-delay: calc(var(--cell-i, 0) * 45ms + 0.5s);
+  }
+}
+
+@keyframes home-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes home-chart-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes home-stat-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.78;
+  }
+}
+
+@keyframes home-cell-glow {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.12);
+  }
+}
+
 /* Short displays (720p, laptop at 100%) */
 @media (max-height: 800px) {
   :root {
