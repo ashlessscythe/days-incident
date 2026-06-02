@@ -1,36 +1,100 @@
 /* 10-foot interface: fits entirely within viewport at 100% zoom */
 
 :root {
-  --bg: #1a2332;
-  --text: #f5f6f8;
-  --text-muted: #b8c0cc;
-  --safe-green: #2ecc71;
-  --safe-green-dim: #27ae60;
-  --safe-blue: #5dade2;
-  --safe-blue-dim: #2980b9;
-  --cross-empty: #4a5568;
-  --cross-border: #2d3748;
+  --cross-empty: oklch(0.35 0.03 260);
+  --cross-border: oklch(0.28 0.03 260 / 70%);
 
-  /* Scale type with viewport height so stacks fit at 100% zoom */
   --site-title: clamp(1.5rem, 4.5vh, 3.25rem);
   --days-value: clamp(2.25rem, 10vh, 6.5rem);
-  --days-label: clamp(0.9rem, 2.2vh, 1.5rem);
+  --days-label: clamp(0.65rem, 1.6vh, 0.85rem);
   --days-unit: clamp(0.75rem, 1.8vh, 1.25rem);
   --month: clamp(1rem, 2.8vh, 1.75rem);
   --detail: clamp(0.75rem, 1.6vh, 1.1rem);
   --cross-cell: clamp(0.65rem, 1.8vh, 1.35rem);
 
-  /* Space reserved above/below the cross (title + stats + month + footer + gaps) */
-  --chrome: 17.5rem;
+  --chrome: 18rem;
 }
 
 .App {
+  position: relative;
   height: 100%;
   text-align: center;
+  isolation: isolate;
+}
+
+/* Layered ambient background */
+.app-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.32 0.06 240 / 45%), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, oklch(0.28 0.05 155 / 25%), transparent),
+    linear-gradient(165deg, oklch(0.12 0.03 260) 0%, oklch(0.16 0.035 255) 45%, oklch(0.13 0.04 270) 100%);
+}
+
+.app-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(oklch(1 0 0 / 3%) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(1 0 0 / 3%) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 75%);
+}
+
+.app-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.55;
+  animation: orb-drift 18s ease-in-out infinite;
+}
+
+.app-orb-green {
+  width: min(42vw, 420px);
+  height: min(42vw, 420px);
+  top: 8%;
+  left: -8%;
+  background: oklch(0.55 0.16 155 / 35%);
+  animation-delay: 0s;
+}
+
+.app-orb-blue {
+  width: min(38vw, 380px);
+  height: min(38vw, 380px);
+  top: 55%;
+  right: -6%;
+  background: oklch(0.5 0.14 240 / 30%);
+  animation-delay: -6s;
+}
+
+.app-orb-violet {
+  width: min(28vw, 280px);
+  height: min(28vw, 280px);
+  bottom: 12%;
+  left: 35%;
+  background: oklch(0.45 0.1 280 / 22%);
+  animation-delay: -12s;
+}
+
+@keyframes orb-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(3%, -2%) scale(1.05);
+  }
+  66% {
+    transform: translate(-2%, 3%) scale(0.96);
+  }
 }
 
 .App-header {
-  background: var(--bg);
+  position: relative;
+  z-index: 1;
   height: 100dvh;
   max-height: 100dvh;
   display: flex;
@@ -39,7 +103,6 @@
   justify-content: center;
   padding: clamp(0.35rem, 1vh, 0.75rem) clamp(0.5rem, 2vw, 1rem);
   box-sizing: border-box;
-  color: var(--text);
   overflow: hidden;
 }
 
@@ -52,69 +115,69 @@
   min-height: 0;
   max-height: 100%;
   width: 100%;
-  gap: clamp(0.15rem, 0.6vh, 0.5rem);
+  max-width: 52rem;
+  gap: clamp(0.25rem, 0.75vh, 0.65rem);
   overflow: hidden;
+}
+
+.site-header {
+  width: 100%;
 }
 
 .site-title {
   margin: 0;
-  flex-shrink: 0;
   font-size: var(--site-title);
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   line-height: 1.05;
   text-transform: uppercase;
+  background: linear-gradient(
+    135deg,
+    oklch(0.97 0.01 260) 0%,
+    oklch(0.82 0.04 240) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .loading {
   font-size: var(--days-label);
-  color: var(--text-muted);
-}
-
-.days-hero {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: flex-end;
-  gap: clamp(1.5rem, 6vw, 4rem);
-  width: 100%;
-  margin: 0;
-  flex-shrink: 0;
-}
-
-.days-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 0;
 }
 
 .days-label {
   font-size: var(--days-label);
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  line-height: 1.1;
 }
 
 .days-value {
   font-size: var(--days-value);
-  font-weight: 800;
   line-height: 1;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  background: linear-gradient(
+    180deg,
+    oklch(0.98 0.01 260) 0%,
+    oklch(0.78 0.03 260) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .days-unit {
   font-size: var(--days-unit);
-  font-weight: 500;
-  color: var(--text-muted);
-  text-transform: lowercase;
-  line-height: 1.1;
 }
 
-/* Cross: height capped from remaining viewport so footer is never clipped */
+.incident-chart-card {
+  flex: 0 1 auto;
+  min-height: 0;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.incident-chart-wrap {
+  display: flex;
+  justify-content: center;
+}
+
 .incident-chart {
   --chart-max-h: min(34dvh, calc(100dvh - var(--chrome)));
   --chart-w: min(70vw, 680px, calc(var(--chart-max-h) * 0.8));
@@ -141,71 +204,52 @@
   align-items: center;
   font-size: var(--cross-cell);
   font-weight: 700;
-  border-radius: 3px;
-  color: var(--text-muted);
+  border-radius: 6px;
+  color: oklch(0.65 0.02 260);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 6%);
+  transition: filter 0.2s ease, box-shadow 0.2s ease;
 }
 
-.cross-square.green {
-  background: var(--safe-green);
-  border-color: var(--safe-green-dim);
-  color: #fff;
+.cross-square.recordable {
+  background: linear-gradient(
+    145deg,
+    oklch(0.76 0.17 155) 0%,
+    oklch(0.58 0.14 155) 100%
+  );
+  border-color: oklch(0.52 0.14 155 / 80%);
+  color: oklch(0.99 0.01 155);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 25%),
+    0 0 12px oklch(0.72 0.17 155 / 25%);
 }
 
-.cross-square.blue {
-  background: var(--safe-blue);
-  border-color: var(--safe-blue-dim);
-  color: #fff;
+.cross-square.non-recordable {
+  background: linear-gradient(
+    145deg,
+    oklch(0.72 0.12 240) 0%,
+    oklch(0.54 0.12 240) 100%
+  );
+  border-color: oklch(0.48 0.12 240 / 80%);
+  color: oklch(0.99 0.01 240);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 25%),
+    0 0 12px oklch(0.68 0.12 240 / 25%);
 }
 
 .cross-square.hidden {
   visibility: hidden;
 }
 
-.current-month {
-  margin: 0;
-  flex-shrink: 0;
-  line-height: 1.1;
-}
-
 .body-month {
-  margin: 0;
   font-size: var(--month);
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: 0.03em;
 }
 
-.incident-details {
-  margin: 0;
-  padding: 0;
-  flex-shrink: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(0.75rem, 3vw, 2rem);
-  font-size: var(--detail);
-  line-height: 1.2;
-  color: var(--text-muted);
-}
-
-.incident-details p {
-  margin: 0;
-}
-
-.detail-label {
-  font-weight: 600;
-  margin-right: 0.4em;
-  color: var(--text);
-}
-
-/* Landing demo */
 .home-demo .home-tagline {
-  margin: 0;
-  flex-shrink: 0;
+  margin: 0.25rem 0 0;
   font-size: var(--days-unit);
   font-weight: 500;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
+  color: var(--muted-foreground);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -219,6 +263,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .home-demo .home-tagline,
+  .home-demo .site-header,
   .home-demo .days-hero,
   .home-demo .home-cross-wrap,
   .home-demo .current-month,
@@ -242,7 +287,7 @@
     animation-delay: 0.36s;
   }
 
-  .home-demo .incident-chart {
+  .home-demo .incident-chart-card {
     animation: home-chart-pop 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
   }
 
@@ -254,11 +299,11 @@
     animation: home-cell-glow 4s ease-in-out infinite;
   }
 
-  .home-demo .cross-square.green {
+  .home-demo .cross-square.recordable {
     animation-delay: calc(var(--cell-i, 0) * 45ms);
   }
 
-  .home-demo .cross-square.blue {
+  .home-demo .cross-square.non-recordable {
     animation-delay: calc(var(--cell-i, 0) * 45ms + 0.5s);
   }
 }
@@ -305,10 +350,9 @@
   }
 }
 
-/* Short displays (720p, laptop at 100%) */
 @media (max-height: 800px) {
   :root {
-    --chrome: 15rem;
+    --chrome: 16rem;
     --days-value: clamp(2rem, 9vh, 5rem);
     --site-title: clamp(1.25rem, 4vh, 2.5rem);
   }
@@ -320,15 +364,17 @@
 
 @media (max-height: 650px) {
   :root {
-    --chrome: 13rem;
+    --chrome: 14rem;
     --days-value: clamp(1.75rem, 8vh, 4rem);
-  }
-
-  .days-hero {
-    gap: clamp(1rem, 4vw, 2rem);
   }
 
   .incident-chart {
     --chart-max-h: min(28dvh, calc(100dvh - var(--chrome)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-orb {
+    animation: none;
   }
 }

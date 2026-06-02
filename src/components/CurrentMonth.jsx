@@ -1,4 +1,5 @@
 import React from "react";
+import { Badge } from "@/components/ui/badge";
 
 const CurrentMonth = React.memo(({ data }) => {
   if (!data || !data.todaysDate) {
@@ -23,8 +24,13 @@ const CurrentMonth = React.memo(({ data }) => {
   const currentYear = currentDate.getFullYear();
   const text = `${currentMonth} ${currentYear}`;
   return (
-    <div className="current-month">
-      <p className="body-month" aria-label="Current month">{text}</p>
+    <div className="current-month shrink-0" aria-label="Current month">
+      <Badge
+        variant="secondary"
+        className="body-month border-border/50 px-4 py-1.5 text-base font-semibold tracking-wide sm:text-lg"
+      >
+        {text}
+      </Badge>
     </div>
   );
 });

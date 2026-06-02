@@ -9,8 +9,10 @@ const HomePage = () => {
 
   return (
     <main className="site-page home-demo">
-      <h1 className="site-title">Incident Tracker</h1>
-      <p className="home-tagline">Sample dashboard</p>
+      <header className="site-header shrink-0 text-center">
+        <h1 className="site-title">Incident Tracker</h1>
+        <p className="home-tagline">Sample dashboard</p>
+      </header>
 
       <IncidentsDaysAgo data={demoData} />
       <div className="home-cross-wrap">
